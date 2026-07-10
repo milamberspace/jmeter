@@ -3,36 +3,25 @@
 
 # Apache JMeter — pr-management-triage CI-check to doc-URL map
 
-Maps `apache/jmeter`'s real GitHub Actions check names (case-insensitive
-substring match, first-found wins) to a category + doc URL for the triage
-violations feedback. Check names were read from live open-PR status
-rollups.
+Maps a failing GitHub Actions check to a doc URL for the triage
+violations feedback.
+
+**Deliberately generic — no per-check-name patterns.** JMeter's CI matrix
+job names are generated dynamically (`matrix.mjs` → `JDK, vendor, os,
+timezone, locale` cells) and change often, so any hand-maintained
+check-name → category map would go stale quickly. Per the review feedback
+on the adoption PR, *stale context is worse than no context*: we keep a
+single generic pointer rather than a matrix of names to maintain. All build,
+static-check, and test failures are documented in one place — `gradle.md`.
 
 ## Table
 
-JMeter's CI (Gradle-based) emits: a `Validation` job (Autostyle / Checkstyle
-/ SpotBugs / license / build sanity), an `Error Prone (JDK <n>)` static-
-analysis job, a `Matrix Preparation` setup job, and a large cross-platform
-**test matrix** whose job names encode `JDK, vendor, os, timezone, locale`
-(e.g. `21, temurin, macos, UTC, tr_TR`, optionally `… , stress JIT`). The
-vendor substrings below catch the matrix rows.
-
 | Pattern | Category | Doc URL |
 |---|---|---|
-| `validation` | Validation (Autostyle / Checkstyle / SpotBugs / license) | `https://github.com/apache/jmeter/blob/master/gradle.md` |
-| `error prone` | Error Prone (static analysis) | `https://github.com/apache/jmeter/blob/master/gradle.md` |
-| `matrix preparation` | CI matrix setup | `https://github.com/apache/jmeter/blob/master/gradle.md` |
-| `stress jit` | Test matrix (stress-JIT run) | `https://github.com/apache/jmeter/blob/master/gradle.md` |
-| `temurin`, `corretto`, `zulu`, `liberica`, `microsoft`, `oracle` | Cross-platform tests (JDK × vendor × OS × locale matrix) | `https://github.com/apache/jmeter/blob/master/gradle.md` |
-| `same hashcode` | Test matrix (same-hashcode run) | `https://github.com/apache/jmeter/blob/master/gradle.md` |
-| `*` (catch-all) | Other failing CI checks | `https://github.com/apache/jmeter/blob/master/gradle.md` |
+| `*` (catch-all) | Failing CI check | `https://github.com/apache/jmeter/blob/master/gradle.md` |
 
 ## Notes
 
-- **Order matters** — specific rows above the catch-all; the skill matches
-  first-found. The vendor row deliberately sits below `validation` /
-  `error prone` so those static jobs are categorised distinctly rather than
-  as generic tests.
 - **Merge-conflict fallback.** When `mergeable == CONFLICTING`, the skill
   emits a separate "Merge conflicts" category:
 
