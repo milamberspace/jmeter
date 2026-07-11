@@ -108,11 +108,14 @@ __pycache__/
 
 # Deterministic agent-guard PreToolUse hook — framework code synced
 # from the snapshot by /magpie-setup (and seeded into each worktree),
-# not an adopter artefact. The committed .claude/settings.json wires
-# it; the script itself stays gitignored. Force-add your own guards
-# under guards.d/ with `git add -f` if you want them tracked.
+# not an adopter artefact. /magpie-setup wires the hook into the
+# per-machine .claude/settings.local.json (kept gitignored below) at
+# the same time it deposits the script, so nothing hook-related is
+# committed. Force-add your own guards under guards.d/ with
+# `git add -f` if you want them tracked.
 /.claude/hooks/agent-guard.py
 /.claude/hooks/guards.d/
+/.claude/settings.local.json
 
 # Framework-skill symlinks created by /magpie-setup. One uniform
 # block per skills dir you use: the `magpie-*` glob ignores them
